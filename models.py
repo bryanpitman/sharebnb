@@ -1,7 +1,6 @@
+from collections import UserString
 from datetime import datetime
-from email.quoprimime import body_check
-from pyexpat.errors import messages
-from termios import TIOCPKT_FLUSHREAD
+
 
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
@@ -36,24 +35,13 @@ class User(db.Model):
         nullable=False,
     )
 
-    location = db.Column(
-        db.Text,
-        nullable=False
-    )
-
-    is_admin = db.Column(
-        db.Boolean,
-        nullable=False,
-        default=False
-    )
-
-    messages = db.relationship('Message', backref="user")
+    created_listings = db.relationship('Listing', foreign_keys='Listing.created_by', backref='created_by')
 
     def __repr__(self):
-        return f"<User #{self.id}: {self.username}, {self.email}>"
+        return f"<User # {self.username}, {self.email}>"
 
     @classmethod
-    def signup(cls, username, email, password, image_url=DEFAULT_IMAGE_URL):
+    def signup(cls, username, email, password):
         """Sign up user.
 
         Hashes password and adds user to system.
@@ -64,8 +52,7 @@ class User(db.Model):
         user = User(
             username=username,
             email=email,
-            password=hashed_pwd,
-            image_url=image_url,
+            password=hashed_pwd
         )
 
         db.session.add(user)
@@ -107,7 +94,7 @@ class Listing(db.Model):
     title = db.Column(
         db.Text,
         nullable=False,
-        default=DEFAULT_LOCATION_IMAGE,
+        default=DEFAULT_IMAGE_URL,
     )
 
     description = db.Column(
@@ -116,10 +103,16 @@ class Listing(db.Model):
         default="",
     )
 
-    photo = db.Column(
+    location = db.Column(
         db.Text,
         nullable=False,
-        default=DEFAULT_LOCATION_IMAGE,
+        default="",
+    )
+
+    photo_url = db.Column(
+        db.Text,
+        nullable=False,
+        default=DEFAULT_IMAGE_URL,
     )
 
     price = db.Column(
@@ -129,12 +122,51 @@ class Listing(db.Model):
 
     created_by = db.Column(
         db.String,
-        db.ForeignKey(  # TODO:),
+        db.ForeignKey('users.username', ondelete='CASCADE'),
         nullable=False
     )
 
-    @ classmethod
-    def find_all()
+    # @ classmethod
+    # def find_all()
 
-    @ classmethod
-    def create()
+    # @ classmethod
+    # def create()
+
+# class Booking(db.Model):
+#     """Join table between users and messages (the join represents a like)."""
+
+#     __tablename__ = 'bookings'
+
+#     booking_id = db.Column(
+#         db.Integer,
+#         nullable=False,
+#         primary_key=True,
+#     )
+
+#     listing_id = db.Column(
+#         db.Integer,
+#         db.ForeignKey('listings.id', ondelete='CASCADE'),
+#         nullable=False,
+#     )
+
+#     owner_id = db.Column(
+#         db.String,
+#         db.ForeignKey('users.username', ondelete='CASCADE'),
+#         nullable=False,
+#     )
+
+#     renter_id = db.Column(
+#         db.String,
+#         db.ForeignKey('users.username', ondelete='CASCADE'),
+#         nullable=False,
+#     )
+
+
+def connect_db(app):
+    """Connect this database to provided Flask app.
+
+    You should call this in your Flask app.
+    """
+
+    db.app = app
+    db.init_app(app)
