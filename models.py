@@ -39,8 +39,8 @@ class User(db.Model):
         nullable=False,
     )
 
-    created_listings = db.relationship(
-        'Listing', foreign_keys='Listing.created_by', backref='created_by')
+    # created_listings = db.relationship(
+    #     'Listing', foreign_keys='Listing.created_by', backref='created_by')
 
     def __repr__(self):
         return f"<User # {self.username}, {self.email}>"
@@ -142,10 +142,10 @@ class Listing(db.Model):
         nullable=False
     )
 
-    rented_by = db.Column(
-        db.String,
-        db.ForeignKey('users.username', ondelete='CASCADE'),
-    )
+    # rented_by = db.Column(
+    #     db.String,
+    #     db.ForeignKey('users.username', ondelete='CASCADE'),
+    # )
 
     # @ classmethod
     # def find_all()

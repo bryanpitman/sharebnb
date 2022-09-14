@@ -1,15 +1,13 @@
 {% extends 'base.html' %}
 <div>
   {% block content %}
-  {% for listing in listings %}
   <div class="card">
     <h4>{{listing.title}}</h4>
     <p>{{listing.location}}</p>
     <p>{{listing.description}}</p>
     <p>${{listing.price}} per Night</p>
-    <img src={{listing.photo_url}} class="listing-photo">
+    <img src={{listing.photo_url}}>
   </div>
 
-  {% endfor %}
   {% endblock %}
 </div>

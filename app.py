@@ -1,10 +1,11 @@
+from operator import or_
 import os
 from dotenv import load_dotenv
 
 from flask import (
     Flask, render_template, request, flash, redirect, session, g, abort,
 )
-from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 
 # from forms import (
 #     UserAddForm, UserEditForm, LoginForm, MessageForm, CSRFProtection,
@@ -12,6 +13,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from models import (
     db, connect_db, User, Listing, DEFAULT_IMAGE_URL, )
+
+from sqlalchemy import or_
 
 load_dotenv()
 
@@ -27,7 +30,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 app.config['SECRET_KEY'] = os.environ['SECRET_KEY']  # TODO: move to S3
-toolbar = DebugToolbarExtension(app)
+# toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
 
@@ -36,90 +39,101 @@ connect_db(app)
 # User signup/login/logout
 
 
-# @app.route('/signup', methods=["GET", "POST"])
-# def signup():
-#     """Handle user signup.
+@app.route('/signup', methods=["GET", "POST"])
+def signup():
+    """Handle user signup.
 
-#     Create new user and add to DB. Redirect to home page.
+    Create new user and add to DB. Redirect to home page.
 
-#     If form not valid, present form.
+    If form not valid, present form.
 
-#     If the there already is a user with that username: flash message
-#     and re-present form.
-#     """
-
-
-# @app.route('/login', methods=["GET", "POST"])
-# def login():
-#     """Handle user login and redirect to homepage on success."""
+    If the there already is a user with that username: flash message
+    and re-present form.
+    """
 
 
-# @app.post('/logout')
-# def logout():
-#     """Handle logout of user and redirect to homepage."""
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    """Handle user login and redirect to homepage on success."""
 
 
-# ##############################################################################
-# # Standard restful routes for listings:
-
-# @app.get('/listings')
-# def list_listings():
-#     """Page with listing of listings."""
-
-#     if not g.user:
-#         flash("Access unauthorized.", "danger")
-#         return redirect("/")
-
-#     # search = request.args.get('q')
-
-#     listings = Listing.query.all()
-
-#     # if not search:
-#     #     listings = Listing.query.all()
-#     # else:
-#     #     listings = Listing.query.filter(Listing.description.like(f"%{search}%")).all()
-
-#     return render_template('listings.html', listings=listings)
+@app.post('/logout')
+def logout():
+    """Handle logout of user and redirect to homepage."""
 
 
-# app.get('/listings/<int:listing_id>')
+##############################################################################
+# Standard restful routes for listings:
+
+@app.get('/listings')
+def list_listings():
+    """Page with listing of listings."""
+
+    # if not g.user:
+    #     flash("Access unauthorized.", "danger")
+    #     return redirect("/")
+
+    search = request.args.get('q')
+
+    listings = Listing.query.all()
+
+    if not search:
+        listings = Listing.query.all()
+    else:
+        listings = Listing.query.filter(or_(Listing.location.ilike(f"%{search}%"),
+                                            Listing.title.ilike(f"%{search}%"),
+                                            Listing.description.ilike(f"%{search}%"))
+                                        ).all()
+
+    return render_template('listings.html', listings=listings)
 
 
-# def show_listing(listing_id):
-#     """Show listing details."""
+@app.get('/listings/<int:listing_id>')
+def show_listing(listing_id):
+    """Show listing details."""
+
+    listing = Listing.query.get_or_404(listing_id)
+
+    return render_template('listing-details.html', listing=listing)
 
 
-# app.patch('/listings/<int:listing_id>/edit')
+@app.post('/listings/<int:listing_id>/edit')
+def edit_listing(listing_id):
+    """Show listing details."""
+
+    # TODO: FORM
 
 
-# def edit_listing(listing_id):
-#     """Show listing details."""
+@app.post('/listings/<int:listing_id>/delete')
+def delete_listing(listing_id):
+    """Show listing details."""
+
+    listing = Listing.query.get_or_404(listing_id)
+    db.session.delete(listing)
+    db.session.commit()
+
+    return redirect("/listings")
 
 
-# app.post('/listings/<int:listing_id>/delete')
+@app.post('/listings')
+def add_listings():
+    """add a listing to listings."""
+
+    # TODO: FORM
 
 
-# def delete_listing(listing_id):
-#     """Show listing details."""
+##############################################################################
+# General routes:
+
+@app.get('/')
+def homepage():
+    """ show home page."""
+
+    return render_template('home.html')
 
 
-# @app.post('/listings')
-# def add_listings():
-#     """add a listing to listings."""
+@app.errorhandler(404)
+def page_not_found(e):
+    """404 NOT FOUND page."""
 
-
-# ##############################################################################
-# # General routes:
-
-# @app.get('/')
-# def homepage():
-#     """ show home page."""
-
-#     return render_template('home.html')
-
-
-# @app.errorhandler(404)
-# def page_not_found(e):
-#     """404 NOT FOUND page."""
-
-#     return render_template('404.html'), 404
+    return render_template('404.html'), 404

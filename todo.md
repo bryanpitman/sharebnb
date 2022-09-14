@@ -1,0 +1,4 @@
+- add form
+- save to db
+- upload image
+- authentication
