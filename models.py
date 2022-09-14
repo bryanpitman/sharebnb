@@ -1,8 +1,10 @@
-# from flask_bcrypt import Bcrypt
-# bcrypt = Bcrypt()
-
-
 from flask_sqlalchemy import SQLAlchemy
+import dotenv
+from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt()
+
+dotenv.load_dotenv()
+
 
 db = SQLAlchemy()
 
@@ -18,12 +20,18 @@ class User(db.Model):
     username = db.Column(
         db.String(length=50),
         primary_key=True,
+        unique=True,
     )
 
     email = db.Column(
         db.Text,
         nullable=False,
         unique=True,
+    )
+
+    bio = db.Column(
+        db.Text,
+        default=""
     )
 
     password = db.Column(
@@ -76,6 +84,15 @@ class User(db.Model):
 
         return False
 
+    def serialize(self):
+        """Serialize User object to dictionary"""
+
+        return {
+            "username": self.username,
+            "email": self.email,
+            "bio": self.bio,
+        }
+
 
 # Listing
 class Listing(db.Model):
@@ -114,8 +131,9 @@ class Listing(db.Model):
     )
 
     price = db.Column(
-        db.Float,
+        db.Numeric(10, 2),
         nullable=False,
+        default=0,
     )
 
     created_by = db.Column(
@@ -124,11 +142,30 @@ class Listing(db.Model):
         nullable=False
     )
 
+    rented_by = db.Column(
+        db.String,
+        db.ForeignKey('users.username', ondelete='CASCADE'),
+    )
+
     # @ classmethod
     # def find_all()
 
     # @ classmethod
     # def create()
+
+    def serialize(self):
+        """Serialize to dictionary."""
+
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "location": self.location,
+            "photo_url": self.photo_url,
+            "price": str(self.price),
+            "created_by": self.created_by,
+            "rented_by": self.rented_by
+        }
 
 # class Booking(db.Model):
 #     """Join table between users and messages (the join represents a like)."""
@@ -162,10 +199,7 @@ class Listing(db.Model):
 
 
 def connect_db(app):
-    """Connect this database to provided Flask app.
-
-    You should call this in your Flask app.
-    """
+    """Connect this database to provided Flask app."""
 
     db.app = app
     db.init_app(app)
