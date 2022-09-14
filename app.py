@@ -1,6 +1,7 @@
 from operator import or_
 import os
 from dotenv import load_dotenv
+from forms import ListingAddForm
 
 from flask import (
     Flask, render_template, request, flash, redirect, session, g, abort,
@@ -115,11 +116,26 @@ def delete_listing(listing_id):
     return redirect("/listings")
 
 
-@app.post('/listings')
+@app.route('/listings/add', methods=["GET", "POST"])
 def add_listings():
     """add a listing to listings."""
+    form = ListingAddForm()
 
-    # TODO: FORM
+    if form.validate_on_submit():
+
+        listing = Listing.create(
+            title=form.title.data,
+            description=form.description.data,
+            location=form.location.data,
+            photo_url=form.photo_url.data,
+            price=form.price.data,
+            created_by=form.created_by.data,
+        )
+        db.session.commit()
+        return redirect('/listings')
+
+
+    return render_template('add-listing.html', form=form)
 
 
 ##############################################################################

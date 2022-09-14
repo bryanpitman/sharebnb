@@ -150,8 +150,20 @@ class Listing(db.Model):
     # @ classmethod
     # def find_all()
 
-    # @ classmethod
-    # def create()
+    @ classmethod
+    def create(title, description, location,
+               photo_url, price, created_by):
+
+        new_listing = Listing(
+            title=title,
+            description=description,
+            location=location,
+            photo_url=photo_url,
+            price=price,
+            created_by=created_by,
+        )
+        db.session.add(new_listing)
+        return new_listing
 
     def serialize(self):
         """Serialize to dictionary."""
