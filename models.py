@@ -150,8 +150,8 @@ class Listing(db.Model):
     # @ classmethod
     # def find_all()
 
-    @ classmethod
-    def create(title, description, location,
+    @classmethod
+    def create(cls, title, description, location,
                photo_url, price, created_by):
 
         new_listing = Listing(
@@ -165,19 +165,19 @@ class Listing(db.Model):
         db.session.add(new_listing)
         return new_listing
 
-    def serialize(self):
-        """Serialize to dictionary."""
+    # def serialize(self):
+    #     """Serialize to dictionary."""
 
-        return {
-            "id": self.id,
-            "title": self.title,
-            "description": self.description,
-            "location": self.location,
-            "photo_url": self.photo_url,
-            "price": str(self.price),
-            "created_by": self.created_by,
-            "rented_by": self.rented_by
-        }
+    #     return {
+    #         "id": self.id,
+    #         "title": self.title,
+    #         "description": self.description,
+    #         "location": self.location,
+    #         "photo_url": self.photo_url,
+    #         "price": str(self.price),
+    #         "created_by": self.created_by,
+    #         "rented_by": self.rented_by
+    #     }
 
 # class Booking(db.Model):
 #     """Join table between users and messages (the join represents a like)."""
