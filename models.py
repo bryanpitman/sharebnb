@@ -157,7 +157,9 @@ class Listing(db.Model):
     def create(cls, data, file):
 
         filename = secure_filename(file.filename)
+        # filename = filename_result.replace("_", "")
 
+        # breakpoint()
         s3 = boto3.client(
             "s3",
             aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),

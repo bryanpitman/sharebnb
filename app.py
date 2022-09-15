@@ -147,7 +147,7 @@ def add_listings():
 def homepage():
     """ show home page."""
 
-    return render_template('home.html')
+    return redirect("/listings")
 
 
 @app.errorhandler(404)
