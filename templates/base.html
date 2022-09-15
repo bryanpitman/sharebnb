@@ -48,16 +48,16 @@
         {% endblock %}
 
         {% if not g.user %}
-        <li><a href="/listings/add">Add Listing</a></li>
         <li><a href="/signup">Sign up</a></li>
         <li><a href="/login">Log in</a></li>
         {% else %}
-        <li>
+        <li><a href="/listings/add">Add Listing</a></li>
+        <!-- <li>
           <a href="/users/{{ g.user.id }}">
             <img src="{{ g.user.image_url }}" alt="{{ g.user.username }}">
           </a>
-        </li>
-        <li><a href="/messages/new">New Message</a></li>
+        </li> -->
+        <!-- <li><a href="/messages/new">New Message</a></li> -->
         <li>
           <form method="POST" action="/logout">
             {{ g.csrf_form.hidden_tag() }}

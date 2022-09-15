@@ -1,12 +1,13 @@
 - ~~home page reroute to listings w/out descriptions~~
     ~~-clicking on a listing will show the details~~
-- authentication (signup login)
-    - once logged in (hide signup and login button)
-      - (add logout button)
-    - not logged in (hide listing)
+- ~~~authentication (signup login) ~~~
+    -  ~~~once logged in (hide signup and login button) ~~~
+      -  ~~~(add logout button) ~~~
+    -  ~~~not logged in (hide listing)~~~
 - build relationship in db for users and listings
     - make the exisiting user whoever is logged-in
 -  add more to the description with details of the private outdoor space
+-  change auth to jwt
 -  refactor logic with AWS
 -  remove helper functions?
 -  eliminate import error

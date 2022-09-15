@@ -1,8 +1,10 @@
 from operator import or_
 import os
 from dotenv import load_dotenv
-from forms import ListingAddForm
+from forms import ListingAddForm, UserAddForm, CSRFProtection, LoginForm
 from helpers import upload_file_to_s3
+from sqlalchemy.exc import IntegrityError
+
 
 from flask import (
     Flask, render_template, request, flash, redirect, session, g, abort,
@@ -19,6 +21,8 @@ from models import (
 from sqlalchemy import or_
 
 load_dotenv()
+
+CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
 
@@ -40,6 +44,35 @@ connect_db(app)
 ##############################################################################
 # User signup/login/logout
 
+@app.before_request
+def add_user_to_g():
+    """If we're logged in, add curr user to Flask global."""
+
+    if CURR_USER_KEY in session:
+        g.user = User.query.get(session[CURR_USER_KEY])
+
+    else:
+        g.user = None
+
+
+@app.before_request
+def add_csrf_only_form():
+    """Add a CSRF-only form so that every route can use it."""
+
+    g.csrf_form = CSRFProtection()
+
+
+def do_login(user):
+    """Log in user."""
+
+    session[CURR_USER_KEY] = user.username
+
+
+def do_logout():
+    """Log out user."""
+
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
@@ -53,16 +86,66 @@ def signup():
     and re-present form.
     """
 
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
+    form = UserAddForm()
 
+    if form.validate_on_submit():
+        try:
+            user = User.signup(
+                username=form.username.data,
+                password=form.password.data,
+                email=form.email.data,
+                bio=form.bio.data
+            )
+            db.session.commit()
+
+        except IntegrityError:
+            flash("Username already taken", 'danger')
+            return render_template('user_signup.html', form=form)
+
+        do_login(user)
+        return redirect("/")
+
+    else:
+        return render_template('/user_signup.html', form=form)
+
+
+
+# TODO: create login form
 @app.route('/login', methods=["GET", "POST"])
 def login():
     """Handle user login and redirect to homepage on success."""
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = User.authenticate(
+            form.username.data,
+            form.password.data)
+
+        if user:
+            do_login(user)
+            return redirect("/")
+
+        flash("Invalid credentials.", 'danger')
+
+    return render_template('/login-form.html', form=form)
 
 
 @app.post('/logout')
 def logout():
     """Handle logout of user and redirect to homepage."""
 
+    form = g.csrf_form
+
+    if not form.validate_on_submit() or not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    do_logout()
+
+    flash("You have successfully logged out.", 'success')
+    return redirect("/login")
 
 ##############################################################################
 # Standard restful routes for listings:
