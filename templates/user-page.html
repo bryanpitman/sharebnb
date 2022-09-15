@@ -1,0 +1,27 @@
+
+
+
+{% extends 'base.html' %}
+<div>
+  {% block content %}
+
+  <div class="card-deck">
+
+    {% for listing in listings %}
+    <a href="/listings/{{listing.id}}" class="card-link">
+      <div class="card listing-card">
+        <img class="card-img-top" src={{listing.photo_url}} alt={{listing.title}}>
+        <div class="card-body">
+          <h5 class="card-title">{{listing.title}}</h5>
+          <p class="card-text">{{listing.location}}</p>
+          <!-- <p class="card-text">{{listing.description}}</p> -->
+          <p class="card-text"><small class="text-muted">${{listing.price}} night</small></p>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+
+  </div>
+  {% endblock %}
+
+</div>

@@ -25,7 +25,7 @@ class ListingAddForm(FlaskForm):
         FileAllowed(['jpg', 'png'], 'Upload Image')
     ])
     price = IntegerField('Price per Night', validators=[DataRequired()])
-    created_by = StringField('Created by', validators=[DataRequired()])
+    # created_by = StringField('Created by', validators=[DataRequired()])
 
 
 class UserAddForm(FlaskForm):

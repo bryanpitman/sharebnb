@@ -52,11 +52,11 @@
         <li><a href="/login">Log in</a></li>
         {% else %}
         <li><a href="/listings/add">Add Listing</a></li>
-        <!-- <li>
+        <li>
           <a href="/users/{{ g.user.id }}">
-            <img src="{{ g.user.image_url }}" alt="{{ g.user.username }}">
+            {{ g.user.username }}
           </a>
-        </li> -->
+        </li>
         <!-- <li><a href="/messages/new">New Message</a></li> -->
         <li>
           <form method="POST" action="/logout">

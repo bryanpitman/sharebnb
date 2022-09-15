@@ -69,7 +69,7 @@ class User(db.Model):
         db.session.add(user)
         return user
 
-    
+
 
     @classmethod
     def authenticate(cls, username, password):
@@ -157,7 +157,7 @@ class Listing(db.Model):
     # def find_all()
 
     @classmethod
-    def create(cls, data, file):
+    def create(cls, data, file, username):
 
         filename = secure_filename(file.filename)
         # filename = filename_result.replace("_", "")
@@ -182,7 +182,7 @@ class Listing(db.Model):
             location=data['location'],
             photo_url=f"{LOCATION_IMAGE_URL}{filename}",
             price=data['price'],
-            created_by=data['created_by'],
+            created_by=username
         )
 
         db.session.add(new_listing)

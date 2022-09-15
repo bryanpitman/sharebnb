@@ -7,11 +7,13 @@
 - build relationship in db for users and listings
     - make the exisiting user whoever is logged-in
 -  add more to the description with details of the private outdoor space
+-  add owner to description details
 -  change auth to jwt
 -  refactor logic with AWS
 -  remove helper functions?
 -  eliminate import error
 -  add testing
 - fix spacing error when uploading images
+- add book button with calendar of dates?
 - (maybe)edit form
 - (messages maybeee)

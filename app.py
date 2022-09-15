@@ -74,6 +74,7 @@ def do_logout():
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
+
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
     """Handle user signup.
@@ -111,8 +112,6 @@ def signup():
         return render_template('/user_signup.html', form=form)
 
 
-
-# TODO: create login form
 @app.route('/login', methods=["GET", "POST"])
 def login():
     """Handle user login and redirect to homepage on success."""
@@ -150,13 +149,10 @@ def logout():
 ##############################################################################
 # Standard restful routes for listings:
 
+
 @app.get('/listings')
 def list_listings():
     """Page with listing of listings."""
-
-    # if not g.user:
-    #     flash("Access unauthorized.", "danger")
-    #     return redirect("/")
 
     search = request.args.get('q')
 
@@ -199,24 +195,23 @@ def delete_listing(listing_id):
 
     return redirect("/listings")
 
-# TODO:
-# TODO:
-# TODO:
-# TODO:
-# TODO:
-
 
 @app.route('/listings/add', methods=["GET", "POST"])
 def add_listings():
     """add a listing to listings."""
+    if not g.user:
+        flash("Please sign-up to create a listing", "warning")
+        return redirect("/")
+
     form = ListingAddForm()
 
     if form.validate_on_submit():
 
         data = form.data
         file = request.files['photo_url']
+        username = g.user.username
 
-        Listing.create(data, file)
+        Listing.create(data, file, username)
         db.session.commit()
         return redirect('/listings')
 
@@ -238,3 +233,20 @@ def page_not_found(e):
     """404 NOT FOUND page."""
 
     return render_template('404.html'), 404
+
+
+##############################################################################
+# General user routes:
+
+@app.get('/users/<username>')
+def user_profile(username):
+    """Page with listing of properties rented by logged-in user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    listings = Listing.query.filter_by(created_by = username)
+
+    return render_template('/user-page.html', user=g.user, listings = listings)
+
