@@ -134,7 +134,7 @@ class Listing(db.Model):
     )
 
     price = db.Column(
-        db.Numeric(10, 2),
+        db.Numeric(10, 0),
         nullable=False,
         default=0,
     )

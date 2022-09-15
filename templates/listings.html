@@ -1,15 +1,21 @@
 {% extends 'base.html' %}
 <div>
   {% block content %}
-  {% for listing in listings %}
-  <div class="card">
-    <h4>{{listing.title}}</h4>
-    <p>{{listing.location}}</p>
-    <p>{{listing.description}}</p>
-    <p>${{listing.price}} per Night</p>
-    <img src={{listing.photo_url}} class="listing-photo">
-  </div>
 
-  {% endfor %}
+  <div class="card-deck">
+    {% for listing in listings %}
+    <a href="/listings/{{listing.id}}" class="card-link">
+      <div class="card listing-card">
+        <img class="card-img-top" src={{listing.photo_url}} alt={{listing.title}}>
+        <div class="card-body">
+          <h5 class="card-title">{{listing.title}}</h5>
+          <p class="card-text">{{listing.location}}</p>
+          <p class="card-text">{{listing.description}}</p>
+          <p class="card-text"><small class="text-muted">${{listing.price}} night</small></p>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
   {% endblock %}
 </div>
