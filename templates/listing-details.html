@@ -1,16 +1,31 @@
 {% extends 'base.html' %}
 <div>
   {% block content %}
-  <div class="listing-detail-container">
-    <div class="card mb-3 listing-detail">
-      <img src={{listing.photo_url}} class="card-img-top" alt={{listing.title}}>
-      <div class="card-body">
-        <h5 class="card-title">{{listing.title}}</h5>
-        <p class="card-text">{{listing.location}}</p>
-        <p class="card-text">{{listing.description}}</p>
-        <p class="card-text"><small class="text-muted">${{listing.price}} night</small></p>
+  <div class="details-container">
+    <div class="listing-detail-container">
+      <div class="card mb-3 listing-detail">
+        <img src={{listing.photo_url}} class="card-img-top" alt={{listing.title}}>
+        <div class="card-body">
+          <h5 class="card-title">{{listing.title}}</h5>
+          <p class="card-text">Hosted by <a href="/users/{{listing.created_by}}"
+              class="created-by-user">{{listing.created_by}}</a></p>
+          <hr class="mt-2 mb-3" />
+          <b>Location: </b><br>
+          <p class="card-text">{{listing.location}}</p>
+          <b>Description: </b><br>
+          <p class="card-text">{{listing.description}}</p>
+          <p class="card-text"><small class="text-muted">${{listing.price}} night</small></p>
+        </div>
       </div>
     </div>
+    {% if g.user %}
+    {% if g.user.username == listing.created_by %}
+    <form method="POST" action="/listings/{{ listing.id }}/delete">
+      {{ g.csrf_form.hidden_tag() }}
+      <button id="delete-btn" class="btn btn-primary btn-lg">Delete Listing</button>
+    </form>
+    {% endif %}
+    {% endif %}
   </div>
 
   {% endblock %}

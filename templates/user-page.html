@@ -1,9 +1,15 @@
-
-
-
 {% extends 'base.html' %}
 <div>
   {% block content %}
+
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">{{user.username}}</h1>
+      <p class="lead">{{user.bio}}</p>
+    </div>
+  </div>
+  <hr class="my-4">
+
 
   <div class="card-deck">
 
@@ -19,8 +25,8 @@
         </div>
       </div>
     </a>
-    {% endfor %}
 
+    {% endfor %}
   </div>
   {% endblock %}
 

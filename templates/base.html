@@ -30,7 +30,7 @@
       <div class="navbar-header">
         <a href="/" class="navbar-brand">
           <img src="/static/sharebnb.png" alt="logo" class="nav-logo">
-          <span class="brand-name">sharebnb</span>
+          <span id="brand-name">sharebnb</span>
         </a>
       </div>
 
@@ -53,7 +53,7 @@
         {% else %}
         <li><a href="/listings/add">Add Listing</a></li>
         <li>
-          <a href="/users/{{ g.user.id }}">
+          <a href="/users/{{ g.user.username }}">
             {{ g.user.username }}
           </a>
         </li>
@@ -61,7 +61,7 @@
         <li>
           <form method="POST" action="/logout">
             {{ g.csrf_form.hidden_tag() }}
-            <button class="btn btn-link">Log out</button>
+            <button id="logout-btn" class="btn btn-link">Log out</button>
           </form>
         <li>
           {% endif %}

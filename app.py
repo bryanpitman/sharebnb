@@ -1,24 +1,16 @@
-from operator import or_
+from sqlalchemy import or_
 import os
 from dotenv import load_dotenv
 from forms import ListingAddForm, UserAddForm, CSRFProtection, LoginForm
-from helpers import upload_file_to_s3
+# from helpers import upload_file_to_s3
 from sqlalchemy.exc import IntegrityError
 
-
 from flask import (
-    Flask, render_template, request, flash, redirect, session, g, abort,
+    Flask, render_template, request, flash, redirect, session, g
 )
-# from flask_debugtoolbar import DebugToolbarExtension
-
-# from forms import (
-#     UserAddForm, UserEditForm, LoginForm, MessageForm, CSRFProtection,
-# )
 
 from models import (
     db, connect_db, User, Listing)
-
-from sqlalchemy import or_
 
 load_dotenv()
 
@@ -35,7 +27,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///sharebnb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
-app.config['SECRET_KEY'] = os.environ['SECRET_KEY']  # TODO: move to S3
+app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 # toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
@@ -181,13 +173,14 @@ def show_listing(listing_id):
 @app.post('/listings/<int:listing_id>/edit')
 def edit_listing(listing_id):
     """Show listing details."""
+# TODO:
 
-    # TODO: FORM
 
-
+# TODO: Add delete button to UI
 @app.post('/listings/<int:listing_id>/delete')
 def delete_listing(listing_id):
     """Show listing details."""
+# TODO: add logic to confirm user's listing
 
     listing = Listing.query.get_or_404(listing_id)
     db.session.delete(listing)
@@ -213,7 +206,7 @@ def add_listings():
 
         Listing.create(data, file, username)
         db.session.commit()
-        return redirect('/listings')
+        return redirect(f"/users/{username}")
 
     return render_template('add-listing.html', form=form)
 
@@ -223,7 +216,7 @@ def add_listings():
 
 @app.get('/')
 def homepage():
-    """ show home page."""
+    """ show listings page."""
 
     return redirect("/listings")
 
@@ -246,7 +239,7 @@ def user_profile(username):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    listings = Listing.query.filter_by(created_by = username)
+    listings = Listing.query.filter_by(created_by=username)
+    user = User.query.get_or_404(username)
 
-    return render_template('/user-page.html', user=g.user, listings = listings)
-
+    return render_template('/user-page.html', user=user, listings=listings)

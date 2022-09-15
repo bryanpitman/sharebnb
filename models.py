@@ -69,8 +69,6 @@ class User(db.Model):
         db.session.add(user)
         return user
 
-
-
     @classmethod
     def authenticate(cls, username, password):
         """Find user with `username` and `password`.
@@ -148,21 +146,17 @@ class Listing(db.Model):
         nullable=False
     )
 
-    # rented_by = db.Column(
-    #     db.String,
-    #     db.ForeignKey('users.username', ondelete='CASCADE'),
-    # )
-
-    # @ classmethod
-    # def find_all()
-
     @classmethod
     def create(cls, data, file, username):
+        """
+        Creates a new listing. 
+        Establishes connection to AWS server and uploads. 
+        Adds new listing in the db.
+        Returns new listing.
+        """
 
         filename = secure_filename(file.filename)
-        # filename = filename_result.replace("_", "")
 
-        # breakpoint()
         s3 = boto3.client(
             "s3",
             aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
@@ -187,50 +181,6 @@ class Listing(db.Model):
 
         db.session.add(new_listing)
         return new_listing
-
-    # def serialize(self):
-    #     """Serialize to dictionary."""
-
-    #     return {
-    #         "id": self.id,
-    #         "title": self.title,
-    #         "description": self.description,
-    #         "location": self.location,
-    #         "photo_url": self.photo_url,
-    #         "price": str(self.price),
-    #         "created_by": self.created_by,
-    #         "rented_by": self.rented_by
-    #     }
-
-# class Booking(db.Model):
-#     """Join table between users and messages (the join represents a like)."""
-
-#     __tablename__ = 'bookings'
-
-#     booking_id = db.Column(
-#         db.Integer,
-#         nullable=False,
-#         primary_key=True,
-#         autoincrement=True
-#     )
-
-#     listing_id = db.Column(
-#         db.Integer,
-#         db.ForeignKey('listings.id', ondelete='CASCADE'),
-#         nullable=False,
-#     )
-
-#     owner_id = db.Column(
-#         db.String,
-#         db.ForeignKey('users.username', ondelete='CASCADE'),
-#         nullable=False,
-#     )
-
-#     renter_id = db.Column(
-#         db.String,
-#         db.ForeignKey('users.username', ondelete='CASCADE'),
-#         nullable=False,
-#     )
 
 
 def connect_db(app):

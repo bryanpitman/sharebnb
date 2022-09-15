@@ -4,16 +4,20 @@
     -  ~~~once logged in (hide signup and login button) ~~~
       -  ~~~(add logout button) ~~~
     -  ~~~not logged in (hide listing)~~~
-- build relationship in db for users and listings
-    - make the exisiting user whoever is logged-in
+- ~~build relationship in db for users and listings~~
+    - ~~make the exisiting user whoever is logged-in~~
 -  add more to the description with details of the private outdoor space
--  add owner to description details
+-  ~~add owner to description details~~
 -  change auth to jwt
+- add delete button to listing
+- uuid for aws
 -  refactor logic with AWS
 -  remove helper functions?
--  eliminate import error
+-  ~~eliminate import error~~
 -  add testing
 - fix spacing error when uploading images
 - add book button with calendar of dates?
-- (maybe)edit form
+- (maybe) edit form
+- (maybe) listing filters
 - (messages maybeee)
+

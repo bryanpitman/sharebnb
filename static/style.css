@@ -40,9 +40,29 @@
   background-color: #FF5A5F;
 }
 
+.btn-link {
+  color: #FF5A5F;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: #FF5A5F;
+  text-decoration: underline;
+}
+
 .form-control {
   margin-bottom: 1rem;
 }
+
+.created-by-user {
+  color: #FF5A5F;
+}
+
+.created-by-user:hover {
+  color: #FF5A5F;
+}
+
 
 /* ======================= Nav */
 
@@ -77,10 +97,12 @@
 
 }
 
-.brand-name {
+#brand-name {
   font-size: 28px;
   /* font-weight: bold; */
 }
+
+
 
 .navbar-brand>img {
   display: inline-block;
@@ -195,4 +217,37 @@ nav+.container {
 body {
   font-family: 'Poppins', sans-serif;
   margin-top: 100px;
+}
+
+#listing-btn,
+#login-btn,
+#signup-btn,
+#delete-btn {
+  color: #fff;
+  background-color: #FF5A5F;
+  border-color: #FF5A5F;
+}
+
+#listing-btn:hover,
+#login-btn:hover,
+#signup-btn:hover,
+#delete-btn {
+  color: #fff;
+  background-color: #f9383f;
+  border-color: #f9383f;
+}
+
+#logout-btn:hover {
+  color: #f9383f;
+}
+
+#brand-name:hover {
+  font-size: 28px;
+  text-decoration: none;
+}
+
+.details-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
