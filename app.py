@@ -191,6 +191,26 @@ def delete_listing(listing_id):
     return redirect("/listings")
 
 
+@app.post('/listings/<int:listing_id>/reserve')
+def reserve_listing(listing_id):
+    """Reserve a listing."""
+
+    form = g.csrf_form
+
+    listing = Listing.query.get_or_404(listing_id)
+
+    if not form.validate_on_submit() or not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/listings/{listing_id}")
+
+    #TODO: booking = Booking(listing_id, user)
+    # TODO: add logic if property is already book
+    # TODO: add status to listing
+    db.session.commit()
+
+    return redirect("/listings")
+
+
 @app.route('/listings/add', methods=["GET", "POST"])
 def add_listings():
     """add a listing to listings."""

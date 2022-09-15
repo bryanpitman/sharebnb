@@ -25,6 +25,13 @@
       <button id="delete-btn" class="btn btn-primary btn-lg">Delete Listing</button>
     </form>
     {% endif %}
+
+    {% if g.user.username != listing.created_by %}
+    <form method="POST" action="/listings/{{ listing.id }}/reserve">
+      {{ g.csrf_form.hidden_tag() }}
+      <button id="reserve-btn" class="btn btn-primary btn-lg">Reserve</button>
+    </form>
+    {% endif %}
     {% endif %}
   </div>
 
