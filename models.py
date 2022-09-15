@@ -44,8 +44,8 @@ class User(db.Model):
         nullable=False,
     )
 
-    # created_listings = db.relationship(
-    #     'Listing', foreign_keys='Listing.created_by', backref='created_by')
+    created_listings = db.relationship(
+        'Listing', foreign_keys='Listing.created_by', backref='user')
 
     def __repr__(self):
         return f"<User # {self.username}, {self.email}>"
@@ -90,17 +90,9 @@ class User(db.Model):
 
         return False
 
-    def serialize(self):
-        """Serialize User object to dictionary"""
-
-        return {
-            "username": self.username,
-            "email": self.email,
-            "bio": self.bio,
-        }
-
-
 # Listing
+
+
 class Listing(db.Model):
     """Listing in the system."""
 

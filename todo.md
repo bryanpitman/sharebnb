@@ -9,7 +9,7 @@
 -  add more to the description with details of the private outdoor space
 -  ~~add owner to description details~~
 -  change auth to jwt
-- add delete button to listing
+- ~~add delete button to listing~~
 - uuid for aws
 -  refactor logic with AWS
 -  remove helper functions?

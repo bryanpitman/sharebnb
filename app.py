@@ -2,7 +2,6 @@ from sqlalchemy import or_
 import os
 from dotenv import load_dotenv
 from forms import ListingAddForm, UserAddForm, CSRFProtection, LoginForm
-# from helpers import upload_file_to_s3
 from sqlalchemy.exc import IntegrityError
 
 from flask import (
@@ -18,9 +17,6 @@ CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
 
-
-# Get DB_URI from environ variable (useful for production/testing) or,
-# if not set there, use development local db.
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///sharebnb'
 # app.config['SQLALCHEMY_DATABASE_URI'] = (
 #     os.environ['DATABASE_URL'].replace("postgres://", "postgresql://"))
@@ -79,6 +75,9 @@ def signup():
     and re-present form.
     """
 
+    if g.user:
+        return redirect("/")
+
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
     form = UserAddForm()
@@ -107,6 +106,10 @@ def signup():
 @app.route('/login', methods=["GET", "POST"])
 def login():
     """Handle user login and redirect to homepage on success."""
+
+    if g.user:
+        return redirect("/")
+
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -170,19 +173,18 @@ def show_listing(listing_id):
     return render_template('listing-details.html', listing=listing)
 
 
-@app.post('/listings/<int:listing_id>/edit')
-def edit_listing(listing_id):
-    """Show listing details."""
-# TODO:
-
-
-# TODO: Add delete button to UI
 @app.post('/listings/<int:listing_id>/delete')
 def delete_listing(listing_id):
-    """Show listing details."""
-# TODO: add logic to confirm user's listing
+    """Delete listing."""
+
+    form = g.csrf_form
 
     listing = Listing.query.get_or_404(listing_id)
+
+    if not form.validate_on_submit() or (g.user != listing.created_by):
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
     db.session.delete(listing)
     db.session.commit()
 
@@ -210,6 +212,23 @@ def add_listings():
 
     return render_template('add-listing.html', form=form)
 
+##############################################################################
+# General user routes:
+
+
+@app.get('/users/<username>')
+def user_profile(username):
+    """Page with listing of properties rented by logged-in user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    listings = Listing.query.filter_by(created_by=username)
+    user = User.query.get_or_404(username)
+
+    return render_template('/user-page.html', user=user, listings=listings)
+
 
 ##############################################################################
 # General routes:
@@ -226,20 +245,3 @@ def page_not_found(e):
     """404 NOT FOUND page."""
 
     return render_template('404.html'), 404
-
-
-##############################################################################
-# General user routes:
-
-@app.get('/users/<username>')
-def user_profile(username):
-    """Page with listing of properties rented by logged-in user."""
-
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
-
-    listings = Listing.query.filter_by(created_by=username)
-    user = User.query.get_or_404(username)
-
-    return render_template('/user-page.html', user=user, listings=listings)

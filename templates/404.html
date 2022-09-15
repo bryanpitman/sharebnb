@@ -5,18 +5,17 @@
 {% block content %}
 
 <div class="message-404">
-  <h4 class="display-4">Sorry, that page doesn't exist! {{ request.status }}</h4>
-  <p class="m-3">
-    You can search Sharebnb using the search box below or
-    <a href="/"><b>return to the homepage</b></a>.
-  </p>
-  <div class="row">
-    <div class="col-sm-8 ms-auto me-auto">
-      <form action="/listings">
-        <div class="input-group">
-          <input name="q" value="Search Sharebnb" class="form-control mb-0 me-2 rounded">
-          <button type="submit" class="input-group-text btn btn-default">Search</button>
-        </div>
+  <div class="container">
+    <h4 class="display-4">Sorry, that page doesn't exist! {{ request.status }}</h4>
+    <p class="m-3">
+      <a href="/" class="btn-link "><b>Return to the homepage</b></a>.
+    </p>
+    <div class="row">
+      <div class="col-sm-8 ms-auto me-auto">
+        <form action="/listings">
+          <div class="input-group">
+          </div>
+      </div>
       </form>
     </div>
   </div>
