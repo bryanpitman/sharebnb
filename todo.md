@@ -1,4 +1,4 @@
 - add form
 - save to db
 - upload image
-- authentication
+- authentication (signup login)
