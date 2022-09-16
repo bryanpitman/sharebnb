@@ -232,8 +232,8 @@ body {
 #listing-btn:hover,
 #login-btn:hover,
 #signup-btn:hover,
-#reserve-btn,
-#delete-btn {
+#reserve-btn:hover,
+#delete-btn:hover {
   color: #fff;
   background-color: #f9383f;
   border-color: #f9383f;
