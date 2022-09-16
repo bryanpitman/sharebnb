@@ -181,13 +181,14 @@ def delete_listing(listing_id):
 
     listing = Listing.query.get_or_404(listing_id)
 
-    if not form.validate_on_submit() or (g.user != listing.created_by):
+    if not form.validate_on_submit() or (g.user.username != listing.created_by):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
     db.session.delete(listing)
     db.session.commit()
 
+    flash("Listing deleted.", "success")
     return redirect("/listings")
 
 
@@ -200,7 +201,6 @@ def reserve_listing(listing_id):
     listing = Listing.query.get_or_404(listing_id)
     curr_user = g.user.username
 
-
     if not form.validate_on_submit() or not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/listings/{listing_id}")
@@ -211,6 +211,7 @@ def reserve_listing(listing_id):
     # TODO: add status to listing
     db.session.commit()
 
+    flash("Booking Confirmed!", "success")
     return redirect(f"/listings/{listing_id}")
 
 
