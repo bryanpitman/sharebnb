@@ -144,8 +144,7 @@ class Listing(db.Model):
 
     rented_by = db.Column(
         db.String,
-        db.ForeignKey('users.username', ondelete='CASCADE'),
-        nullable=False
+        db.ForeignKey('users.username', ondelete='CASCADE')
     )
 
 

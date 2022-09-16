@@ -26,10 +26,22 @@
     </form>
     {% endif %}
 
-    {% if g.user.username != listing.created_by %}
+    {% if g.user.username != listing.created_by and not listing.rented_by  %}
     <form method="POST" action="/listings/{{ listing.id }}/reserve">
       {{ g.csrf_form.hidden_tag() }}
       <button id="reserve-btn" class="btn btn-primary btn-lg">Reserve</button>
+    </form>
+    {% endif %}
+    {% if listing.rented_by and listing.rented_by != g.user.username %}
+    <form method="POST" action="/listings/{{ listing.id }}/reserve">
+      {{ g.csrf_form.hidden_tag() }}
+      <button disabled id="reserve-btn" class="btn btn-primary btn-lg">Unavailable</button>
+    </form>
+    {% endif %}
+    {% if g.user.username != listing.created_by and listing.rented_by == g.user.username %}
+    <form method="POST" action="/listings/{{ listing.id }}/reserve">
+      {{ g.csrf_form.hidden_tag() }}
+      <button disabled id="reserve-btn" class="btn btn-primary btn-lg">Booking Confirmed</button>
     </form>
     {% endif %}
     {% endif %}

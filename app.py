@@ -199,18 +199,19 @@ def reserve_listing(listing_id):
 
     listing = Listing.query.get_or_404(listing_id)
     curr_user = g.user.username
-    
+
 
     if not form.validate_on_submit() or not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/listings/{listing_id}")
 
+    listing.rented_by = curr_user
     #TODO: booking = Booking(listing_id, user)
     # TODO: add logic if property is already book
     # TODO: add status to listing
     db.session.commit()
 
-    return redirect("/listings")
+    return redirect(f"/listings/{listing_id}")
 
 
 @app.route('/listings/add', methods=["GET", "POST"])
