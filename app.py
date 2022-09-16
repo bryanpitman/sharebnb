@@ -254,6 +254,24 @@ def user_profile(username):
     return render_template('/user-page.html', user=user, listings=listings)
 
 
+@app.get('/users/<username>/reservations')
+def user_reservations(username):
+    """Page with listing of properties rented by logged-in user."""
+
+    curr_user = g.user.username
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    if curr_user != username:
+        return redirect(f"/users/{curr_user}/reservations")
+
+    listings = Listing.query.filter_by(rented_by=username)
+    user = User.query.get_or_404(username)
+
+    return render_template('/my-reservations.html', user=user, listings=listings)
+
+
 ##############################################################################
 # General routes:
 

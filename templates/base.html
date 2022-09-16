@@ -52,6 +52,7 @@
         <li><a href="/login">Log in</a></li>
         {% else %}
         <li><a href="/listings/add">Add Listing</a></li>
+        <li><a href="/users/{{ g.user.username }}/reservations">My Reservations</a></li>
         <li>
           <a href="/users/{{ g.user.username }}">
             {{ g.user.username }}

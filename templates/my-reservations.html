@@ -9,11 +9,11 @@
     </div>
   </div>
   <hr class="my-4">
-  <h2>Listings:</h2>
-
-
+  {% if user.rented_listings|length == 0 %}
+  <h6 class="display-6">No current reservations.</h6>
+  {% else %}
+  <h2>My Reservations:</h2>
   <div class="card-deck">
-
     {% for listing in listings %}
     <a href="/listings/{{listing.id}}" class="card-link">
       <div class="card listing-card">
@@ -28,9 +28,8 @@
     </a>
 
     {% endfor %}
+    {% endif %}
   </div>
-
-
 
   {% endblock %}
 
