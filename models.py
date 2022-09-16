@@ -45,7 +45,11 @@ class User(db.Model):
     )
 
     created_listings = db.relationship(
-        'Listing', foreign_keys='Listing.created_by', backref='user')
+        'Listing', foreign_keys='Listing.created_by', backref='owner')
+
+    rented_listings = db.relationship(
+        'Listing', foreign_keys='Listing.rented_by', backref='renter'
+    )
 
     def __repr__(self):
         return f"<User # {self.username}, {self.email}>"
@@ -138,11 +142,18 @@ class Listing(db.Model):
         nullable=False
     )
 
+    rented_by = db.Column(
+        db.String,
+        db.ForeignKey('users.username', ondelete='CASCADE'),
+        nullable=False
+    )
+
+
     @classmethod
     def create(cls, data, file, username):
         """
-        Creates a new listing. 
-        Establishes connection to AWS server and uploads. 
+        Creates a new listing.
+        Establishes connection to AWS server and uploads.
         Adds new listing in the db.
         Returns new listing.
         """

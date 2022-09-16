@@ -198,6 +198,8 @@ def reserve_listing(listing_id):
     form = g.csrf_form
 
     listing = Listing.query.get_or_404(listing_id)
+    curr_user = g.user.username
+    
 
     if not form.validate_on_submit() or not g.user:
         flash("Access unauthorized.", "danger")
