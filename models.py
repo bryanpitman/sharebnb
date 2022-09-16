@@ -94,8 +94,6 @@ class User(db.Model):
 
         return False
 
-# Listing
-
 
 class Listing(db.Model):
     """Listing in the system."""
@@ -146,7 +144,6 @@ class Listing(db.Model):
         db.String,
         db.ForeignKey('users.username', ondelete='CASCADE')
     )
-
 
     @classmethod
     def create(cls, data, file, username):

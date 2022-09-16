@@ -206,9 +206,7 @@ def reserve_listing(listing_id):
         return redirect("/listings/{listing_id}")
 
     listing.rented_by = curr_user
-    #TODO: booking = Booking(listing_id, user)
-    # TODO: add logic if property is already book
-    # TODO: add status to listing
+
     db.session.commit()
 
     flash("Booking Confirmed!", "success")
@@ -232,6 +230,7 @@ def add_listings():
 
         Listing.create(data, file, username)
         db.session.commit()
+        flash("Listing successfully added.", "success")
         return redirect(f"/users/{username}")
 
     return render_template('add-listing.html', form=form)
