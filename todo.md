@@ -10,12 +10,12 @@
 -  ~~add owner to description details~~
 -  change auth to jwt
 - ~~add delete button to listing~~
-- uuid for aws
+- uuid for aws to ensure a unique file name. (same file name)
+- fix spacing error when uploading images
 -  refactor logic with AWS
--  remove helper functions?
+-  create helper functions
 -  ~~eliminate import error~~
 -  add testing
-- fix spacing error when uploading images
 - add book button with calendar of dates?
 - (maybe) edit form
 - (maybe) listing filters
