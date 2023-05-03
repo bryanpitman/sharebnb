@@ -14,7 +14,7 @@ dnspython==2.2.1
 email-validator==1.2.1
 executing==1.0.0
 flake8==5.0.4
-Flask==2.2.2
+Flask==2.2.5
 Flask-Bcrypt==1.0.1
 Flask-DebugToolbar==0.13.1
 Flask-SQLAlchemy==2.5.1
